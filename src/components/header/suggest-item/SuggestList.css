@@ -1,0 +1,30 @@
+/* SuggestList.css */
+.suggest-list {
+  max-height: 160px;
+  overflow-y: auto;
+  border-radius: var(--border-radius);
+  background: var(--cream);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+/* SuggestItem.css */
+.suggest-item {
+  background: var(--cream);
+  border-radius: var(--border-radius);
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  font-size: 1rem; /* Dimensione normale */
+  font-weight: 400;
+  color: var(--primary-green);
+}
+
+.suggest-item:hover {
+  background: var(--light-green);
+}
+
+.suggest-item h1 {
+  margin: 0;
+  font-size: 1rem; /* Normale, non h1 grande */
+  font-weight: 500;
+}

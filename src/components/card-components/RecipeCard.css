@@ -1,0 +1,66 @@
+/* RecipeCard.css - Tema cucina raffinato */
+.recipe-card {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom right, var(--light-green), rgba(34, 197, 94, 0.1));
+  border-radius: var(--border-radius);
+  box-shadow: 0 12px 32px var(--shadow);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.recipe-card h2 {
+  color: var(--primary-green);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  text-decoration: underline;
+  text-decoration-color: rgba(34, 197, 94, 0.3);
+  margin-bottom: 0.25rem;
+}
+
+.recipe-card-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.recipe-card-info span {
+  color: #9ca3af;
+}
+
+.recipe-card-difficulty {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(34, 197, 94, 0.2);
+  color: var(--primary-green);
+  border-radius: 9999px;
+  padding: 0.25rem 0.5rem;
+  font-weight: 700;
+}
+
+.recipe-card button {
+  margin-top: auto;
+  width: 100%;
+  background: var(--primary-green);
+  color: var(--cream);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  font-size: 1rem;
+  font-weight: 800;
+  box-shadow: 0 4px 12px var(--shadow);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.recipe-card button:hover {
+  background: var(--accent-brown);
+  transform: scale(1.05);
+}
