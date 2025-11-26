@@ -29,24 +29,42 @@ function App() {
 
   //funzione: click su "cerca"
   const handleSearchClick = async () => {
-    setIsDiscover(true);
-    //reset dell'indice a 0 quando si fa una nuova ricerca
-    setCurrentIndex(0);
-
     if (apiKey) {
+      // Se c'è una chiave API, fai la chiamata reale
+      const url = getRecipesURL(selectedIng.map((ing) => ing.name));
       try {
-        const ingredientsNames = selectedIng.map((ing) => ing.name);
-        const url = getRecipesURL(ingredientsNames, apiKey);
-        const response = await fetch(url);
+        console.log('Chiamata API con URL:', `${url}&apiKey=${apiKey}`); // Log per debug
+        const response = await fetch(`${url}&apiKey=${apiKey}`);
         const data = await response.json();
-        setRecipes(data);
+        console.log('Risposta API:', data); // Log per vedere la risposta completa
+        
+        if (!response.ok) {
+          // Gestisci errori HTTP (es. 401, 402)
+          console.error('Errore API:', response.status, data.message);
+          alert(`Errore API: ${response.status} - ${data.message || 'Chiave API non valida o limite superato.'}`);
+          setRecipes([]); // Imposta array vuoto per evitare pagina bianca
+          setPage({ page: "discover-recipes" }); // Naviga comunque
+          return;
+        }
+        
+        // Controlla se ci sono risultati validi
+        if (data && Array.isArray(data.results) && data.results.length > 0) {
+          setRecipes(data.results);
+        } else {
+          console.warn('Nessun risultato dalla API:', data);
+          alert('Nessuna ricetta trovata per questi ingredienti. Prova ingredienti diversi.');
+          setRecipes([]); // Imposta array vuoto
+        }
       } catch (error) {
-        console.error("Errore nel fetch delle ricette:", error);
-        setRecipes(recipesMock); 
+        console.error('Errore di rete nella chiamata API:', error);
+        alert('Errore di connessione. Controlla la tua connessione internet.');
+        setRecipes([]); // Imposta array vuoto
       }
     } else {
+      // Usa i mock
       setRecipes(recipesMock);
     }
+    // Naviga alla pagina delle ricette
     setPage({ page: "discover-recipes" });
   };
 
