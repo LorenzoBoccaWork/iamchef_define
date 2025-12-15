@@ -89,3 +89,17 @@ export const getRecipesURL = (ingredients: string[], apiKey?: string) => {
     
     return `${import.meta.env.VITE_BASE_URL}${ENDPOINT}?apiKey=${key}&ingredients=${ingredientsStr}&number=${RESULT_NUM}`;
 }
+
+// Funzione per ottenere dettagli completi di una ricetta
+export const fetchRecipeDetails = async (id: number, apiKey?: string): Promise<any> => {
+  if (!apiKey) return null; // Usa solo con API key
+  try {
+    const response = await fetch(`https://api.spoonacular.com/recipes/${id}/information?apiKey=${apiKey}`);
+    if (!response.ok) throw new Error('Errore nel caricamento dettagli');
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Errore fetch dettagli ricetta:', error);
+    return null;
+  }
+};

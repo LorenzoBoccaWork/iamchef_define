@@ -31,7 +31,7 @@ const ScrollBtn: React.FC<ScrollBtnProps> = ({
 
   return (
     <button
-      className={`${opacity} ${cursor} text-4xl font-bold text-green-700 hover:text-green-900 transition-colors`}
+      className={`${opacity} ${cursor} text-6xl font-bold text-green-700 hover:text-green-900 transition-colors px-4 py-2 rounded-full hover:bg-green-100`}
       onClick={() => onClick(params)}
     >
       {isIncrement ? "→" : "←"}

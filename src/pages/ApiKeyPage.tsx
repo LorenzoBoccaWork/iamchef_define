@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import './ApiKeyPage.css';
 import logo from "../assets/AmC.svg";
 import { useAppStore } from '../store';
+import { useNavigate } from 'react-router';
 
 const ApiKeyPage: React.FC = () => {
   const [apiKeyInput, setApiKeyInput] = useState('');
-  const { setApiKey, setPage } = useAppStore();
+  const { setApiKey } = useAppStore(); // Rimosso setPage, ora usa navigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.body.classList.add('api-key-active');
@@ -17,15 +19,15 @@ const ApiKeyPage: React.FC = () => {
   const handleAccess = () => {
     if (apiKeyInput.trim()) {
       setApiKey(apiKeyInput);
-      setPage({ page: 'search' });
+      navigate('/search'); // Naviga a search con routing
     } else {
       alert('Inserisci una chiave API valida.');
     }
   };
 
   const handleUseMocks = () => {
-    setApiKey('');
-    setPage({ page: 'search' });
+    setApiKey(''); // Imposta API key vuota per usare mock
+    navigate('/search'); // Naviga a search
   };
 
   return (

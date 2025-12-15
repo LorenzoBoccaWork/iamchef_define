@@ -1,4 +1,3 @@
-import type { RecipeInterface } from "../types/recipes";
 import { getDifficulty } from "../utils/getDifficulty";
 import { IconBadge } from "../components/card-components/IconBadge";
 import { RecipeCuisines } from "../components/card-components/RecipeCusines";
@@ -9,23 +8,39 @@ import { RecipeIngredients } from "../components/card-components/RecipeIngredien
 import { RecipeCost } from "../components/card-components/RecipeCost";
 import { RecipeHealtScore } from "../components/card-components/RecipeHealtScore";
 import { fallbackRecipeMock } from "../mock/mocks";
+import { useParams, useNavigate } from "react-router"; // Import per routing
+import { useAppStore } from "../store"; // Store per recuperare ricetta
+import { fetchRecipeDetails } from "../hooks/useApi"; // Import per dettagli API
+import { useState, useEffect } from "react"; // Hook per stato e effetti
 import "./RecipeDetails.css";
 
+// Componente per dettagli ricetta, ora recupera dati da store basato su id URL
+export const RecipeDetails = () => {
+  const { id } = useParams<{ id: string }>(); // Ottieni id dalla URL
+  const navigate = useNavigate(); // Hook per navigazione
+  const { recipes, apiKey } = useAppStore(); // Recupera ricette e apiKey dallo store
 
-type RecipeDetailsProps = {
-  id: number;
-  recipeData: RecipeInterface;
-  goToBack: (id: number) => void
-};
+  const recipeId = id ? parseInt(id, 10) : 0; // Converti id a numero
+  const [detailedRecipe, setDetailedRecipe] = useState<any>(null); // Stato per dettagli completi
 
-export const RecipeDetails = ({ id, recipeData, goToBack }: RecipeDetailsProps) => {
+  // Trova ricetta base dallo store
+  const baseRecipe = recipes.find(r => r.id === recipeId) || fallbackRecipeMock;
 
+  // Carica dettagli completi se mancanti e API key presente
+  useEffect(() => {
+    if (apiKey && baseRecipe && !baseRecipe.extendedIngredients?.length) {
+      fetchRecipeDetails(recipeId, apiKey).then(details => {
+        if (details) setDetailedRecipe(details);
+      });
+    }
+  }, [recipeId, apiKey, baseRecipe]);
 
-
-  const recipe = recipeData || fallbackRecipeMock;
+  // Usa dettagli completi se disponibili, altrimenti base
+  const recipe = detailedRecipe || baseRecipe;
 
   const maxIngredientsToShow = 4;
-  const displayedIngredients = recipe.extendedIngredients.slice(0, maxIngredientsToShow);
+  // Controllo sicuro per ingredienti (evita errore slice su undefined)
+  const displayedIngredients = recipe.extendedIngredients?.slice(0, maxIngredientsToShow) || [];
 
   // Informazioni su possibili tags
   const interestingTags = [
@@ -35,6 +50,11 @@ export const RecipeDetails = ({ id, recipeData, goToBack }: RecipeDetailsProps) 
     recipe.dairyFree && 'Senza Lattosio',
     recipe.veryHealthy && 'Salutare',
   ].filter(Boolean);
+
+  // Funzione per tornare indietro
+  const goToBack = () => {
+    navigate(-1); // Torna alla pagina precedente
+  };
 
   return (
     <div className="recipe-details-wrapper">
@@ -88,7 +108,7 @@ export const RecipeDetails = ({ id, recipeData, goToBack }: RecipeDetailsProps) 
       <div className="recipe-footer">
         <button
           type="button"
-          onClick={() => goToBack(id)}
+          onClick={goToBack}
           className="recipe-back-btn"
         >
           ← Torna indietro
